@@ -5,7 +5,7 @@ class GuitarCard extends StatelessWidget {
   final String type;
   final double price;
   final String desc;
-  final String imgURL;
+  final String imgUrl;
 
   const GuitarCard(
       {Key? key,
@@ -13,7 +13,7 @@ class GuitarCard extends StatelessWidget {
       required this.type,
       required this.price,
       required this.desc,
-      required this.imgURL})
+      required this.imgUrl})
       : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class GuitarCard extends StatelessWidget {
                 height: 140,
                 padding: const EdgeInsets.all(0),
                 child: Image.network(
-                  imgURL,
+                  imgUrl,
                   scale: 0.2,
                   fit: BoxFit.contain,
                 ),

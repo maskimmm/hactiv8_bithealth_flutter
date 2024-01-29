@@ -61,7 +61,7 @@ class _GuitarOverviewScreenState extends State<GuitarOverviewScreen> {
 //                           type: guitar.type,
 //                           price: guitar.price,
 //                           desc: guitar.desc,
-//                           imgURL: guitar.imgURL,
+//                           imgUrl: guitar.imgUrl,
 //                         ),
 //                       )
 //                       .toList(),
@@ -99,7 +99,7 @@ class _GuitarOverviewScreenState extends State<GuitarOverviewScreen> {
                           type: guitar.type,
                           price: guitar.price,
                           desc: guitar.desc,
-                          imgURL: guitar.imgURL,
+                          imgUrl: guitar.imgUrl,
                         ),
                       )
                       .toList(),

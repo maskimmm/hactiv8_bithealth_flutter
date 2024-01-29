@@ -4,7 +4,7 @@ class GuitarModel {
   final String type;
   final double price;
   final String desc;
-  final String imgURL;
+  final String imgUrl;
 
   GuitarModel(
       {required this.id,
@@ -12,5 +12,5 @@ class GuitarModel {
       required this.type,
       required this.price,
       required this.desc,
-      required this.imgURL});
+      required this.imgUrl});
 }
