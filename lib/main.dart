@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/guitar_provider.dart';
-
+import '../screens/login_screen.dart';
+import '../screens/splash_screen.dart';
 import '../screens/guitar_overview_screen.dart';
+
+import '../widgets/login_card.dart';
+
+import '../providers/auth_provider.dart';
+import '../providers/guitar_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,8 +23,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => GuitarProvider(),
+          create: (_) => AuthProvider(),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, GuitarProvider>(
+          update: (ctx, auth, _) => GuitarProvider(auth.token),
+          create: (ctx) => GuitarProvider(''),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -27,7 +36,26 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color(0xffEF6137),
           primarySwatch: Colors.blue,
         ),
-        home: const GuitarOverviewScreen(),
+        home: Consumer<AuthProvider>(
+          builder: (ctx, authProvider, _) {
+            return authProvider.token.isNotEmpty
+                ? const GuitarOverviewScreen()
+                : FutureBuilder(
+                    future: authProvider.autoLogin(),
+                    builder: (context, dataSnapshot) {
+                      if (dataSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const SplashScreen();
+                      } else {
+                        if (dataSnapshot.data == false) {
+                          return const LoginScreen();
+                        } else {
+                          return const GuitarOverviewScreen();
+                        }
+                      }
+                    });
+          },
+        ),
       ),
     );
   }

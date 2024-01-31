@@ -76,7 +76,7 @@ class _GuitarOverviewScreenState extends State<GuitarOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Hactiv8 Music Shop"),
+        title: const Text("Hactiv8 Music Shop"),
       ),
       body: FutureBuilder(
         future: Provider.of<GuitarProvider>(context, listen: false)
