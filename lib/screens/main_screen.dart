@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hactiv8_bithealth_flutter/screens/album_overview_screen.dart';
-import 'package:hactiv8_bithealth_flutter/screens/post_overview_screen.dart';
-import 'package:hactiv8_bithealth_flutter/screens/user_overview_screen.dart';
+
+import '../screens/post_overview_screen.dart';
+import '../screens/user_overview_screen.dart';
+import '../screens/album_overview_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

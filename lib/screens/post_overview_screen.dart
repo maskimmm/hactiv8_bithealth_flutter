@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hactiv8_bithealth_flutter/providers/post_provider.dart';
-import 'package:hactiv8_bithealth_flutter/widgets/post_card.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/post_provider.dart';
+import '../utils/enums/provider_state.dart';
+import '../widgets/post_card.dart';
 
 class PostOverviewScreen extends StatefulWidget {
   const PostOverviewScreen({super.key});
@@ -34,27 +36,28 @@ class _PostOverviewScreenState extends State<PostOverviewScreen> {
       appBar: AppBar(
         title: const Text("Posts JSON Placeholder"),
       ),
-      body: FutureBuilder(
-          future: Provider.of<PostProvider>(context, listen: false)
-              .fetchPostDatas(),
-          builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      body: Consumer<PostProvider>(
+        builder: (ctx, postProvider, ch) {
+          switch (postProvider.state) {
+            case ProviderState.initState:
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else {
-              return Consumer<PostProvider>(
-                builder: (ctx, postProvider, ch) {
-                  final postDatas = postProvider.postDatas;
-                  return ListView(
-                    children: postDatas
-                        .map((data) => PostCardWidget(postModel: data))
-                        .toList(),
-                  );
-                },
-              );
-            }
-          }),
+            case ProviderState.completedState:
+              if (postProvider.postDatas.isEmpty) {
+                return const Center(
+                  child: Text("No Data Available"),
+                );
+              } else {
+                return ListView(
+                  children: postProvider.postDatas
+                      .map((data) => PostCardWidget(postModel: data))
+                      .toList(),
+                );
+              }
+          }
+        },
+      ),
     );
   }
 }

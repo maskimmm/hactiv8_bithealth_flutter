@@ -1,35 +1,24 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 import '../models/post_model.dart';
+import '../utils/enums/provider_state.dart';
+import '../services/api_service.dart';
 
 class PostProvider with ChangeNotifier {
   List<PostModel> _postDatas = <PostModel>[];
+  ProviderState _state = ProviderState.initState;
 
   List<PostModel> get postDatas {
     return [..._postDatas];
   }
 
+  ProviderState get state {
+    return _state;
+  }
+
   Future<void> fetchPostDatas() async {
-    try {
-      final response = await http
-          .get(Uri.parse("http://jsonplaceholder.typicode.com/posts"));
-
-      final decodedData = json.decode(response.body);
-      List<PostModel> posts = [];
-
-      decodedData.forEach((post) {
-        posts.add(PostModel.fromJson(post));
-      });
-
-      _postDatas = posts;
-
-      // final decodedData =
-      //     json.decode(response.body) as List<Map<String, dynamic>>;
-      // _postDatas = decodedData.map((post) => PostModel.fromJson(post)).toList();
-    } catch (err) {
-      rethrow;
-    }
+    _postDatas = await APIService.shared.fetchPostDatas();
+    _state = ProviderState.completedState;
+    notifyListeners();
   }
 }

@@ -1,30 +1,24 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter/material.dart';
+
 import '../models/album_model.dart';
+import '../utils/enums/provider_state.dart';
+import '../services/api_service.dart';
 
 class AlbumProvider with ChangeNotifier {
   List<AlbumModel> _albumDatas = <AlbumModel>[];
+  ProviderState _state = ProviderState.initState;
 
   List<AlbumModel> get albumDatas {
     return [..._albumDatas];
   }
 
+  ProviderState get state {
+    return _state;
+  }
+
   Future<void> fetchAlbumDatas() async {
-    try {
-      final response = await http
-          .get(Uri.parse("http://jsonplaceholder.typicode.com/albums"));
-
-      final decodedData = json.decode(response.body);
-      List<AlbumModel> albums = [];
-
-      decodedData.forEach((post) {
-        albums.add(AlbumModel.fromJson(post));
-      });
-
-      _albumDatas = albums;
-    } catch (err) {
-      rethrow;
-    }
+    _albumDatas = await APIService.shared.fetchAlbumDatas();
+    _state = ProviderState.completedState;
+    notifyListeners();
   }
 }

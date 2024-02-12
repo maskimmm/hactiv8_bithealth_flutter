@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hactiv8_bithealth_flutter/models/album_model.dart';
-import 'package:hactiv8_bithealth_flutter/providers/photo_provider.dart';
-import 'package:hactiv8_bithealth_flutter/widgets/photo_card.dart';
 import 'package:provider/provider.dart';
+
+import '../models/album_model.dart';
+import '../providers/photo_provider.dart';
+import '../utils/enums/provider_state.dart';
+import '../widgets/photo_card.dart';
 
 class PhotoOverviewScreen extends StatefulWidget {
   final AlbumModel albumModel;
@@ -24,6 +26,7 @@ class _PhotoOverviewScreenState extends State<PhotoOverviewScreen> {
     super.didChangeDependencies();
 
     if (_init) {
+      Provider.of<PhotoProvider>(context).state = ProviderState.initState;
       Provider.of<PhotoProvider>(context)
           .fetchPhotoDatas(id: widget.albumModel.id)
           .then((_) {})
@@ -38,29 +41,30 @@ class _PhotoOverviewScreenState extends State<PhotoOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Posts JSON Placeholder"),
+        title: Text("${widget.albumModel.id}. Photo JSON Placeholder"),
       ),
-      body: FutureBuilder(
-          future: Provider.of<PhotoProvider>(context, listen: false)
-              .fetchPhotoDatas(id: widget.albumModel.id),
-          builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      body: Consumer<PhotoProvider>(
+        builder: (ctx, photoProvider, ch) {
+          switch (photoProvider.state) {
+            case ProviderState.initState:
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else {
-              return Consumer<PhotoProvider>(
-                builder: (ctx, photoProvider, ch) {
-                  final photoDatas = photoProvider.photoDatas;
-                  return ListView(
-                    children: photoDatas
-                        .map((data) => PhotoCardWidget(photoModel: data))
-                        .toList(),
-                  );
-                },
-              );
-            }
-          }),
+            case ProviderState.completedState:
+              if (photoProvider.photoDatas.isEmpty) {
+                return const Center(
+                  child: Text("No Data Available"),
+                );
+              } else {
+                return ListView(
+                  children: photoProvider.photoDatas
+                      .map((data) => PhotoCardWidget(photoModel: data))
+                      .toList(),
+                );
+              }
+          }
+        },
+      ),
     );
   }
 }

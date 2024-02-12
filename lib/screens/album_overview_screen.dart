@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hactiv8_bithealth_flutter/providers/album_provider.dart';
-import 'package:hactiv8_bithealth_flutter/widgets/album_card.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/album_provider.dart';
+import '../utils/enums/provider_state.dart';
+import '../widgets/album_card.dart';
 
 class AlbumOverviewScreen extends StatefulWidget {
   const AlbumOverviewScreen({super.key});
@@ -34,27 +36,30 @@ class _AlbumOverviewScreenState extends State<AlbumOverviewScreen> {
       appBar: AppBar(
         title: const Text("Album JSON Placeholder"),
       ),
-      body: FutureBuilder(
-          future: Provider.of<AlbumProvider>(context, listen: false)
-              .fetchAlbumDatas(),
-          builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      body: Consumer<AlbumProvider>(
+        builder: (ctx, albumProvider, ch) {
+          switch (albumProvider.state) {
+            case ProviderState.initState:
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else {
-              return Consumer<AlbumProvider>(
-                builder: (ctx, albumProvider, ch) {
-                  final albumDatas = albumProvider.albumDatas;
-                  return ListView(
-                    children: albumDatas
-                        .map((data) => AlbumCardWidget(albumModel: data))
-                        .toList(),
-                  );
-                },
-              );
-            }
-          }),
+            case ProviderState.completedState:
+              if (albumProvider.albumDatas.isEmpty) {
+                return const Center(
+                  child: Text("No Data Available"),
+                );
+              } else {
+                return ListView(
+                  children: albumProvider.albumDatas
+                      .map((data) => AlbumCardWidget(albumModel: data))
+                      .toList(),
+                );
+              }
+            default:
+              return Container();
+          }
+        },
+      ),
     );
   }
 }
