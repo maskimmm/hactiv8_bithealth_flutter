@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "free",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_development.dart",
+        "args": ["--flavor", "free", "--target", "lib/main_free.dart" ]
+      },
+      {
+        "name": "new_flavor",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_development.dart",
+        "args": ["--flavor", "new_flavor", "--target", "lib/main_new_flavor.dart" ]
+      }
+    ],
+    "compounds": []
+  }
+  
