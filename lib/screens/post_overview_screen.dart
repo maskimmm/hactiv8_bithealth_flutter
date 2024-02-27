@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hactiv8_bithealth_flutter/widgets/post_card_loading.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/post_provider.dart';
@@ -40,8 +41,12 @@ class _PostOverviewScreenState extends State<PostOverviewScreen> {
         builder: (ctx, postProvider, ch) {
           switch (postProvider.state) {
             case ProviderState.initState:
-              return const Center(
-                child: CircularProgressIndicator(),
+              return ListView(
+                children: const <Widget>[
+                  PostCardLoading(),
+                  PostCardLoading(),
+                  PostCardLoading(),
+                ],
               );
             case ProviderState.completedState:
               if (postProvider.postDatas.isEmpty) {
